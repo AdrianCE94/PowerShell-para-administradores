@@ -87,10 +87,11 @@ Remove-LocalUser $i.nombre
 }
 ```
 
-*NOTA*
+***NOTA***
 PUEDE DESCARGAR LOS SCRIPTS DE CREACION DE USUARIOS MASIVA CLONANDO EL REPPSITORIO DE GITHUB
+```
 git clone https://github.com/AdrianCE94/PowerShell-para-administradores
-
+```	
 
 # Carpetas compartidas
 ```powershell 

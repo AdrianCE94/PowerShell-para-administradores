@@ -1,9 +1,11 @@
 # para actualizar powersehll
+
 ```powershell
 winget install --id Microsoft.Powershell --source winget
 ```
 
 # Usuarios
+
 ```powershell
 Get-Command *localuser*
 Get-help Get-localuser -examples
@@ -36,6 +38,7 @@ Remove-LocalUser -confirm -Name "usuario"
 ```
 
 # Grupos
+
 ```powershell
 Get-Command *localgroup*
 Get-help Get-localgroup -examples
@@ -133,12 +136,90 @@ get-smbshare -Name "nombre" |fl *
 # cambiar permisos 
 grant-smbshareaccess -Name "nombre" -AccountName "usuario" -AccessRight Full -Force
 
-# quiar permisos
+# quitar permisos
 revoke-smbshareaccess -Name "nombre" -AccountName "usuario" -Force
 
 # denegar permisos
 block-smbshareaccess -Name "nombre" -AccountName "usuario" -Force
 
+# permitir permisos
+unblock-smbshareaccess -Name "nombre" -AccountName "usuario" -Force
+
 # eliminar recurso compartido
 Remove-SmbShare -Name "nombre" -confirm
 ```
+
+# Gestión de discos
+```powershell
+get-command *disk*
+get-command *partition*
+get-help get-disk -examples
+```
+
+```powershell
+# info de discos
+Get-Disk | fl
+Get-Disk | fl number,serialnumber,HealthStatus,OperationalStatus,Size,PartitionStyle
+
+# info de particiones
+Get-Partition | fl
+Get-Partition -disknumber 1
+
+# trabajar con discos virtuales
+get-windowsoptionalfeature -online -featurename microsoft-hyper-v
+enable-windowsoptionalfeature -online -featurename microsoft-hyper-v
+
+# crear disco virtual
+
+# formato vhd y vhdx
+New-VHD -Path "C:\disco1.vhd" -SizeBytes 1GB -fixed
+New-VHD -Path "C:\disco2.vhd" -SizeBytes 5GB -dynamic
+
+
+# montar disco
+Mount-VHD -Path "C:\disco1.vhd"
+
+# desmontar disco
+Dismount-VHD -Path "C:\disco1.vhd"
+
+# inicializar disco
+Initialize-Disk -Number 1 # cambia de RAW a GPT
+
+# cambiar de GPT a MBR
+Set-Disk -Number 1 -PartitionStyle MBR
+
+# crear particion
+New-Partition -DiskNumber 1 -driveletter v
+
+# formatear particion
+Format-Volume -DriveLetter v -FileSystem NTFS
+
+# probar
+ni v:\prueba.txt
+
+# limpiar disco
+Clear-Disk -Number 1 -RemoveData
+
+```
+# automatizar creación de discos
+
+```powershell
+# uso de passtrough
+mount-vhd -Path "C:\disco2.vhdx" -Passthru |
+Initialize-Disk -passthru | NewPartitionSize -AssignDriveLetter -UseMaximumSize | Format-Volume -FileSystem NTFS -confirm:$false
+```
+```powershell
+#Creación automática de un disco virtual
+$disco=Read-Host "Introduce el nombre del disco (Path)"
+[double]$tamano=Read-Host "Tamaño del disco en bytes"
+New-VHD -Path $disco -SizeBytes $tamano -Dynamic
+Mount-vhd -Path $Disco -Passthru|
+Initialize-Disk -PassThru|
+New-Partition -AssignDriveLetter -UseMaximumSize|
+Format-Volume -FileSystem NTFS -Confirm:$false
+```
+***NOTA***
+PUEDE DESCARGAR LOS SCRIPTS DE CREACION DE USUARIOS MASIVA CLONANDO EL REPPSITORIO DE GITHUB
+```
+git clone https://github.com/AdrianCE94/PowerShell-para-administradores
+```	

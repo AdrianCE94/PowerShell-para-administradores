@@ -268,5 +268,29 @@ clear-dnsclientcache #para limpiar cache
 Get-NetTCPConnection
 Get-NetTCPConnection -state Established | ft localaddress,localport,remoteaddress,remoteport, state -AutoSize
 
+# conectividad
+gip -InterfaceAlias "Ethernet"
+Test-NetConnection $gateway -count 1 -quiet
+Test-NetConnection www.google.es -count 1 -quiet
+
+# script para comprobar conectividad
+Clear-Host
+Write-Host " ----- Conectividad -----"
+#Importamos los datos
+$datos= Import-Csv -Path C:\material\servidores.csv
+#Recorremos los datos
+    foreach ($i in $datos) {
+    $respuesta=Test-Connection $i.ip -Count 1 -quiet
+    if ($respuesta -eq "true") {
+        Write-Host "$i Conexión establecida"
+        }else {Write-Host "$i Error de conexión"}
+    }
+
+#ajustar a la necesidad de cada uno
 ```
+***NOTA***
+PUEDE DESCARGAR LOS SCRIPTS DE CREACION DE USUARIOS MASIVA CLONANDO EL REPPSITORIO DE GITHUB
+```
+git clone https://github.com/AdrianCE94/PowerShell-para-administradores
+```	
 

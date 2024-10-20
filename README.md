@@ -223,3 +223,50 @@ PUEDE DESCARGAR LOS SCRIPTS DE CREACION DE USUARIOS MASIVA CLONANDO EL REPPSITOR
 ```
 git clone https://github.com/AdrianCE94/PowerShell-para-administradores
 ```	
+
+
+# información de red
+```powershell
+get-command -module netadapter
+get-commmand -module nettcpip
+get-help get-netadapter -examples
+```
+```powershell
+get-netadapter
+get-netadapter -Name "Ethernet" |fl
+
+#desactivar adaptador
+Disable-NetAdapter -Name "Ethernet"
+
+#activar adaptador
+Enable-NetAdapter -Name "Ethernet"
+
+# configuración de la red
+Get-NetIPAddress 
+gip
+gi -InterfaceAlias "Ethernet" |fl
+ipconfig
+ipconfig /all
+Get-NetIPAddress -InterfaceAlias "Ethernet" |fl
+# info concreta
+Get-NetIPAddress -InterfaceAlias "Ethernet" -AddressFamily IPv4
+(Get-NetIPAddress -InterfaceAlias "Ethernet" -AddressFamily IPv4).IPAddress
+
+# tablas de rutas
+Get-NetRoute -InterfaceAlias "Ethernet" | ft -AutoSize
+Get-NetRoute -InterfaceAlias "Ethernet" | ft DestinationPrefix,NextHop, InterfaceAlias -AutoSize
+
+# dns
+Get-DnsClientServerAddress -InterfaceAlias "Ethernet" |fl
+resolve-dnsname www.google.es
+
+# cache dns
+Get-DnsClientCache
+clear-dnsclientcache #para limpiar cache
+
+# puertos
+Get-NetTCPConnection
+Get-NetTCPConnection -state Established | ft localaddress,localport,remoteaddress,remoteport, state -AutoSize
+
+```
+

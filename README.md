@@ -95,3 +95,50 @@ git clone https://github.com/AdrianCE94/PowerShell-para-administradores
 
 # Carpetas compartidas
 ```powershell 
+#Detectar smb activado
+Get-SmbServerConfiguration
+#Activar smb
+Set-SmbServerConfiguration -EnableSMB2Protocol $true
+```
+![imgsmb](image.png)
+
+```powershell
+get-command *smbshare*
+get-help new-smbshare -examples
+```
+```powershell
+
+# informacion de carpetas compartidas
+Get-SmbShare -Special $false
+Get-SmbShare -Name "nombre"|fl
+
+# crear un recurso
+new-item -Path "C:\carpeta" -ItemType Directory
+New-SmbShare -Name "nombre" -Path "C:\carpeta"
+
+# ver permisos de una carpeta compartida
+Get-SmbShareAccess -Name "nombre" |fl
+
+# crear recurso con permisos
+ni -Path "C:\carpeta2" -ItemType Directory
+New-SmbShare -Name "nombre2" -Path "C:\carpeta2" -FullAccess "usuario" -ReadAccess "usuario2"
+
+# moficiar un recurso compartido
+Set-SmbShare -Name "nombre" -Description "descripcion"
+
+# cambiar conexiones simultaneas
+Set-SmbShare -Name "nombre" -ConcurrenUserLimit 10 -Force
+get-smbshare -Name "nombre" |fl *
+
+# cambiar permisos 
+grant-smbshareaccess -Name "nombre" -AccountName "usuario" -AccessRight Full -Force
+
+# quiar permisos
+revoke-smbshareaccess -Name "nombre" -AccountName "usuario" -Force
+
+# denegar permisos
+block-smbshareaccess -Name "nombre" -AccountName "usuario" -Force
+
+# eliminar recurso compartido
+Remove-SmbShare -Name "nombre" -confirm
+```

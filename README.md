@@ -460,4 +460,87 @@ Set-ScheduledTask -TaskName "tarea" -Trigger $disparador
 Start-ScheduledTask -TaskName "tarea"
 #parar tarea
 shutdown /a
+
+# activar o desactivar tarea programada
+Enable-ScheduledTask -TaskName "tarea"
+Disable-ScheduledTask -TaskName "tarea"
+# exportar tarea programada
+Get-ScheduledTask -TaskName "tarea" | Export-ScheduledTask -FilePath "C:\tarea.xml"
+# importar tarea programada
+Register-ScheduledTask -Xml (Get-Content "C:\tarea.xml" | Out-String) -TaskName "tarea"
+# eliminar tarea programada
+Unregister-ScheduledTask -TaskName "tarea" -confirm
 ```
+
+# Impresoras
+```powershell
+get-command -module printmanagement
+get-help get-printer -examples
+```
+```powershell
+# ver impresoras
+Get-Printer
+Get-Printer -Name "impresora" | fl *
+Get-PrinterDriver
+Get-PrinterDriver -Name "impresora" | fl *
+    # añadir impresora
+
+#descargar driver
+#añadir al almacenamiento
+#instalar driver
+Add-PrinterDriver -Name "impresora" -InfPath "C:\ruta\driver.inf"
+Get-PrinterDriver
+#agregar el puerto
+Add-PrinterPort -Name "LocalPort:"
+#instalar impresora
+Add-Printer -Name "impresora" -DriverName "impresora" -PortName "LocalPort:"
+#comprobar
+Get-Printer -Name "impresora" | fl *
+#cambiar parametros (shared)
+Set-Printer -Name "impresora" -Shared $true
+#eliminar impresora
+Remove-Printer -Name "impresora" -confirm
+Remove-PrinterDriver -Name "impresora" -confirm
+Remove-PrinterPort -Name "LocalPort:" -confirm
+```
+# Eventos
+```powershell
+Get-command *eventlog*
+Get-help get-eventlog -examples
+```
+```powershell
+Get-EventLog -list
+Get-EventLog -LogName "System" -Newest 5
+Get-EventLog -LogName "System" -InstanceId nº_evento
+Get-EventLog -LogName "System" -EntryType Error
+Get-EventLog -LogName "System" -After (Get-Date).AddDays(-1)
+Get-EventLog -LogName "System" -Before (Get-Date).AddDays(-1)
+Get-Eventlog -LogName "System" -Message "reinicio*"
+Get-eventlog -LogName "System" -InstanceId 6005 | fl TimeGenerated,InstanceId,Message
+```
+```powershell
+Get-command *winevent*
+Get-help get-winevent -examples
+```
+```powershell
+Get-WinEvent -ListLog * | where-object -Property RecordCount -gt 0
+Get-WinEvent -LogName "System" -MaxEvents 5
+Get-WinEvent -filterHashtable @{logname="System";id=6005}
+Get-WinEvent -filterHashtable @{logname="System";providername="Service Control Manager"}
+Get-WinEvent -filterHashtable @{logname="System";level=2}
+```
+
+# WMI / CIM
+
+Base de datos de información de Windows
+```powershell
+#cmdlets de wmi
+Get-Command "*wmi*"
+Get-WmiObject -List
+Get-WmiObject -List | Where-Object {$_.name -like "*bios*"}
+Get-WmiObject -Class win32_bios | fl *
+Get-WmiObject -Class win32_processor | fl *
+Get-WmiObject -Class win32_operatingsystem | fl *
+Get-WmiObject -Class win32_computersystem | fl *
+Get-WmiObject -Class win32_logicaldisk | fl *
+Get-WmiObject -Class win32_networkadapterconfiguration | fl *

@@ -373,9 +373,80 @@ $intro = Read-Host "Pulse intro para continuar"
 }while ($true)
 ```
 
-```
-***NOTA***
+> [!NOTE]
 PUEDE DESCARGAR LOS SCRIPTS DE CREACION DE USUARIOS MASIVA CLONANDO EL REPPSITORIO DE GITHUB
-```
+
+```git
 git clone https://github.com/AdrianCE94/PowerShell-para-administradores
 ```	
+# Procesos
+```powershell
+# comandos de procesos
+get-command *process*
+get-help get-process -examples
+```
+```powershell
+# ver procesos	
+Get-Process
+# buscar un proceso que más consume
+Get-Process | Sort-Object -Property CPU -Descending | Select-Object -First 5
+# buscar un proceso concreto
+Get-Process -Name "chrome" | fl *
+# path
+(Get-Process -Name notepad).path
+ #tamaño
+(Get-Process -Name notepad).ws/1mb
+# parar un proceso
+Stop-Process -Name "chrome" -confirm
+# parar un proceso por id
+Stop-Process -Id 1234 -confirm
+# iniciar un proceso
+Start-Process -FilePath "C:\Windows\notepad.exe"
+# iniciar una app
+Start-Process Ms-clock://
+```
+
+# Servicios
+```powershell
+# comandos de servicios
+get-command *service*
+get-help get-service -examples
+```
+```powershell
+# ver servicios
+Get-Service
+# ver servicios en ejecución
+Get-Service | Where-Object -Property Status -eq "Running"
+# buscar un servicio concreto
+Get-Service -Name "bits" | fl *
+# parar un servicio
+Stop-Service -Name "bits" -confirm
+# iniciar un servicio
+Start-Service -Name "bits"
+# servicios requeridos y dependientes
+Get-Service -RequiredServices -Name "bits"
+Get-Service -DependentServices -Name "bits"
+
+# modificar un servicio (descripcion,displayname,startuptype,status)
+Set-Service -Name "bits" -Description "servicio de transferencia inteligente en segundo plano"
+```
+
+# Programación de tareas
+```powershell
+get-command *scheduledtask*
+get-help new-scheduledtask -examples
+```
+```powershell
+# ver tareas programadas
+Get-ScheduledTask
+# ver tareas programadas concreta
+Get-ScheduledTask -TaskName "tarea" | fl *
+# ver parametros importantes
+Get-ScheduledTask -TaskName "tarea" | fl Actions,Triggers,State
+(Get-ScheduledTask -TaskName "tarea").Actions
+(Get-ScheduledTask -TaskName "tarea").Triggers
+
+# creacion de tarea programada
+ # acciones
+ # triggers
+ # crear tarea programada

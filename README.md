@@ -446,7 +446,18 @@ Get-ScheduledTask -TaskName "tarea" | fl Actions,Triggers,State
 (Get-ScheduledTask -TaskName "tarea").Actions
 (Get-ScheduledTask -TaskName "tarea").Triggers
 
-# creacion de tarea programada
+# creacion de tarea programada modificar a gusto
  # acciones
+ $accion = New-ScheduledTaskAction -Execute "poweshell.exe" -Argument "C:\ruta\script.ps1"
  # triggers
+ $disparador = New-ScheduledTaskTrigger -At 3am -Daily #ajustar a gusto
  # crear tarea programada
+Register-ScheduledTask -TaskName "tarea" -Action $accion -Trigger $disparador -Description "descripcion"
+# modificar tarea programada
+$disparador = New-ScheduledTaskTrigger -At 4am -Daily
+Set-ScheduledTask -TaskName "tarea" -Trigger $disparador
+# iniciar una tarea programada
+Start-ScheduledTask -TaskName "tarea"
+#parar tarea
+shutdown /a
+```
